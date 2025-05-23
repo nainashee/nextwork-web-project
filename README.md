@@ -54,7 +54,7 @@ To get this project up and running on your local machine, follow these steps:
 
 ## Contact
 If you have any questions or comments about the NextWork Web Project, please contact:
-Hussain Ashfaque - [Your Email](mailto:nain.ashee@gmail.com)
+Hussain Ashfaque - [nain.ashee@gmail.com](mailto:nain.ashee@gmail.com)
 
 <br>
 
