@@ -6,18 +6,27 @@ phases:
       java: corretto8
   pre_build:
     commands:
-      - echo Logging in to AWS CodeArtifact...
-      - CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain nextwork --domain-owner 513410254247 --region us-west-2 --query authorizationToken --output text`
-      - export CODEARTIFACT_AUTH_TOKEN
+      - set -e
+      - echo "Logging in to AWS CodeArtifact..."
+      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token \
+          --domain nextwork \
+          --domain-owner 513410254247 \
+          --region us-west-2 \
+          --query authorizationToken --output text)
+      # OPTION A: Let AWS generate Maven settings in ~/.m2
+      # - aws codeartifact login --tool maven --repository <YOUR_REPO_NAME> \
+      #     --domain nextwork --domain-owner 513410254247 --region us-west-2
+      # OPTION B: Use your repo's settings.xml (make sure it uses ${env.CODEARTIFACT_AUTH_TOKEN})
   build:
     commands:
-      - echo Build started on `date`
+      - echo "Build started on $(date)"
       - mvn clean install -s settings.xml
   post_build:
     commands:
-      - echo Build completed on `date`
-      - echo Packaging artifacts...
+      - echo "Build completed on $(date)"
+      - echo "Packaging artifacts..."
       - mvn package -s settings.xml
+
 artifacts:
   files:
     - target/*.war
