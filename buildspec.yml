@@ -3,22 +3,31 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto11   # or corretto17 if your project targets 17
+      java: corretto11   # switch to corretto17 if your project targets 17
   pre_build:
     commands:
       - set -e
       - echo "Logging in to AWS CodeArtifact..."
       - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain nextwork --domain-owner 513410254247 --region us-west-2 --query authorizationToken --output text)
       - echo "Token acquired successfully"
+
   build:
     commands:
+      - echo "====== BEGINNING TEST PHASE ======"
+      - echo "Running tests on $(date)"
+      - chmod +x run-tests.sh
+      - ./run-tests.sh
+      - echo "====== TEST PHASE COMPLETE ======"
+      - echo "====== BEGINNING BUILD PHASE ======"
       - echo "Build started on $(date)"
-      - mvn -B clean install -s settings.xml
+      - mvn -B -s settings.xml compile
+      - echo "====== BUILD PHASE COMPLETE ======"
+
   post_build:
     commands:
+      - echo "Packaging artifacts on $(date)"
+      - mvn -B -s settings.xml package
       - echo "Build completed on $(date)"
-      - echo "Packaging artifacts..."
-      - mvn -B package -s settings.xml
 
 artifacts:
   files:
