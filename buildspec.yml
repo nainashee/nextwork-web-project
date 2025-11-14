@@ -3,31 +3,24 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto11
+      java: corretto11   # or corretto17 if your project targets 17
   pre_build:
     commands:
       - set -e
       - echo "Logging in to AWS CodeArtifact..."
-      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token \
-          --domain nextwork \
-          --domain-owner 513410254247 \
-          --region us-west-2 \
-          --query authorizationToken --output text)
-      # OPTION A: Let AWS generate Maven settings in ~/.m2
-      # - aws codeartifact login --tool maven --repository <YOUR_REPO_NAME> \
-      #     --domain nextwork --domain-owner 513410254247 --region us-west-2
-      # OPTION B: Use your repo's settings.xml (make sure it uses ${env.CODEARTIFACT_AUTH_TOKEN})
+      - export CODEARTIFACT_AUTH_TOKEN=$(aws codeartifact get-authorization-token --domain nextwork --domain-owner 513410254247 --region us-west-2 --query authorizationToken --output text)
+      - echo "Token acquired successfully"
   build:
     commands:
       - echo "Build started on $(date)"
-      - mvn clean install -s settings.xml
+      - mvn -B clean install -s settings.xml
   post_build:
     commands:
       - echo "Build completed on $(date)"
       - echo "Packaging artifacts..."
-      - mvn package -s settings.xml
+      - mvn -B package -s settings.xml
 
 artifacts:
   files:
-    - target/*.war
+    - target/*.war   # change to target/*.jar if your build creates a JAR
   discard-paths: no

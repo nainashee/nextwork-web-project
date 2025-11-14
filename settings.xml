@@ -4,7 +4,7 @@
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
 
   <servers>
-    <!-- ID must match the repo/mirror IDs below -->
+    <!-- Must match all other IDs below -->
     <server>
       <id>nextwork-nextwork-devops-cicd</id>
       <username>aws</username>
@@ -15,26 +15,30 @@
   <profiles>
     <profile>
       <id>nextwork-nextwork-devops-cicd</id>
-      <activation><activeByDefault>true</activeByDefault></activation>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
 
       <repositories>
         <repository>
           <id>nextwork-nextwork-devops-cicd</id>
           <url>https://nextwork-513410254247.d.codeartifact.us-west-2.amazonaws.com/maven/nextwork-devops-cicd/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
         </repository>
       </repositories>
 
-      <!-- THIS is required or Maven will fetch plugins unauthenticated -->
       <pluginRepositories>
         <pluginRepository>
           <id>nextwork-nextwork-devops-cicd</id>
           <url>https://nextwork-513410254247.d.codeartifact.us-west-2.amazonaws.com/maven/nextwork-devops-cicd/</url>
+          <releases><enabled>true</enabled></releases>
+          <snapshots><enabled>true</enabled></snapshots>
         </pluginRepository>
       </pluginRepositories>
     </profile>
   </profiles>
 
-  <!-- Mirror makes all repos go through CodeArtifact; ID must match the <server> ID -->
   <mirrors>
     <mirror>
       <id>nextwork-nextwork-devops-cicd</id>
